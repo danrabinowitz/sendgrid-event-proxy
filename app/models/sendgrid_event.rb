@@ -1,7 +1,6 @@
 class SendgridEvent < ActiveRecord::Base
   
   before_save  :normalize_email
-  after_create :queue
   
   SENDGRID_ATTRIBUTES = ['event',
                          'email',
@@ -14,10 +13,6 @@ class SendgridEvent < ActiveRecord::Base
                          'url',
                          'timestamp']
   
-  def queue
-    Delayed::Job.enqueue(self)
-  end
-    
   def to_ampersand_separated_s
      sendgrid_data = SENDGRID_ATTRIBUTES.map do |variable|
        sendgrid_value = self.send(variable)
