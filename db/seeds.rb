@@ -9,5 +9,5 @@
 SendgridEvent.create({
   :email    => "<paul@mailinator.com>",
   :event    => "processed",
-  :category => "example.com.br#inviter"
+  :category => "client1#campaign1#a"
 })

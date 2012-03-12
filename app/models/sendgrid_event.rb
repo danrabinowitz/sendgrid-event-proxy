@@ -1,6 +1,7 @@
 class SendgridEvent < ActiveRecord::Base
   
   before_save  :normalize_email
+  after_create :post
   
   SENDGRID_ATTRIBUTES = ['event',
                          'email',
@@ -24,18 +25,23 @@ class SendgridEvent < ActiveRecord::Base
   def normalize_email
     self.email = self.email.gsub(/[\<\>]/,'').strip
   end
-  
+
   def url_to_post
     return nil if category.nil?
-    site, model = self.category.split('#') # "example.org#model"
-    return nil if site.nil? or site == "none"
-    "#{site}/sendgrid_event"
+    client,* = category.split('#') # "client1#campaign1#a"
+    return nil if client.nil?
+    return SendgridEventProxy::Application.config.destination_urls[client]
   end
   
-  def perform
-    return false if self.url_to_post.nil?
-    Curl::Easy::http_post(self.url_to_post,self.to_ampersand_separated_s)
+  def post
+    return true if self.url_to_post.nil?
+    begin
+      Curl::Easy::http_post(self.url_to_post,self.to_ampersand_separated_s)
+    rescue
+      logger.warn("Unable to post to #{self.url_to_post}: #{$!}")
+      raise
+    end
     return true
   end
-  
+
 end
