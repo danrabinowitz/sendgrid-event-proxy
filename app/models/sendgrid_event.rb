@@ -29,8 +29,8 @@ class SendgridEvent < ActiveRecord::Base
   def url_to_post
     return nil if category.nil?
     client,* = category.split('#') # "client1#campaign1#a"
-    return nil if client.nil?
-    return SendgridEventProxy::Application.config.destination_urls[client]
+    return nil if client.nil? or client.downcase=='test'
+    return SendgridEventProxy::Application.config.destination_urls[client.downcase]
   end
   
   def post
