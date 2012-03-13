@@ -27,9 +27,6 @@ class SendgridEvent < ActiveRecord::Base
   end
 
   def url_to_post
-    return nil if category.nil?
-    return nil if SendgridEventProxy::Application.config.allowed_nonstandard_categories.include? category
-    
     client,* = category.split('#') # "client1#campaign1#a"
     return nil if client.nil? or client.downcase=='test'
     return nil if ["sendgrid-event-proxy"].include? client.downcase  # This avoids a circular reference, where warning emails generate warning emails!
@@ -40,16 +37,16 @@ class SendgridEvent < ActiveRecord::Base
       logger.warn("Unable to send email: #{$!}")
       raise
     end
-    logger.debug("x1b")
     return url
   end
   
   def post
-    logger.debug("x1")
+    return true if category.nil?
+    return false if ["sendgrid-event-proxy#unknown_client_email"].include? category # No need to save these
+    return true if SendgridEventProxy::Application.config.allowed_nonstandard_categories.include? category
+
     return true if self.url_to_post.nil?
-    logger.debug("x2")
     begin
-      logger.debug("x3")
       Curl::Easy::http_post(self.url_to_post,self.to_ampersand_separated_s)
     rescue
       logger.warn("Unable to post to #{self.url_to_post}: #{$!}")
