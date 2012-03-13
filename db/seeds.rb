@@ -6,8 +6,8 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-SendgridEvent.create({
-  :email    => "<paul@mailinator.com>",
-  :event    => "processed",
-  :category => "client1#campaign1#a"
-})
+# SendgridEvent.create({
+#   :email    => "<paul@mailinator.com>",
+#   :event    => "processed",
+#   :category => "client1#campaign1#a"
+# })

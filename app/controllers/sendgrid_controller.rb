@@ -5,7 +5,9 @@ class SendgridController < ActionController::Base
       @sendgrid_params = request.request_parameters
       @sendgrid_params.merge!({"event_type" => @sendgrid_params.delete("type")}) if @sendgrid_params["type"]
       @sendgrid_params.delete_if{|key,value| not SendgridEvent::SENDGRID_ATTRIBUTES.include?(key) }
-      @sendgrid_event = SendgridEvent.create(@sendgrid_params)
+      unless ["sendgrid-event-proxy#unknown_client_email"].include? @sendgrid_params["category"] # No need to save these
+        @sendgrid_event = SendgridEvent.create(@sendgrid_params)
+      end
     rescue
       @sendgrid_event = nil
     end

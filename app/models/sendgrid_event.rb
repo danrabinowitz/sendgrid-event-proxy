@@ -42,7 +42,6 @@ class SendgridEvent < ActiveRecord::Base
   
   def post
     return true if category.nil?
-    return false if ["sendgrid-event-proxy#unknown_client_email"].include? category # No need to save these
     return true if SendgridEventProxy::Application.config.allowed_nonstandard_categories.include? category
 
     return true if self.url_to_post.nil?
