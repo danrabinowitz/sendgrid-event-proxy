@@ -30,7 +30,7 @@ class SendgridEvent < ActiveRecord::Base
     return nil if category.nil?
     client,* = category.split('#') # "client1#campaign1#a"
     return nil if client.nil? or client.downcase=='test'
-    return nil if ["sendgrid-event-proxy"].includes? client.downcase  # This avoids a circular reference, where warning emails generate warning emails!
+    return nil if ["sendgrid-event-proxy"].include? client.downcase  # This avoids a circular reference, where warning emails generate warning emails!
     url = SendgridEventProxy::Application.config.destination_urls[client.downcase]
     begin
       WarningMailer.unknown_client_email(category,client).deliver if url.nil?
