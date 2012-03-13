@@ -4,7 +4,7 @@ class WarningMailer < ActionMailer::Base
   def unknown_client_email(category,client)
     @category = category
     @client = client
-    headers["category"] = "sendgrid-event-proxy#unknown_client_email"
+    headers['X-SMTPAPI'] = {"category" => "sendgrid-event-proxy#unknown_client_email"}.to_json
     mail(:to => 'dan@vanheyst.com', :subject => "WARNING: Invalid Sendgrid category")
   end
 end
