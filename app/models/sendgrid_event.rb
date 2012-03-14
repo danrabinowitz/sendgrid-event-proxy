@@ -32,7 +32,7 @@ class SendgridEvent < ActiveRecord::Base
     return nil if ["sendgrid-event-proxy"].include? client.downcase  # This avoids a circular reference, where warning emails generate warning emails!
     url = SendgridEventProxy::Application.config.destination_urls[client.downcase]
     begin
-      WarningMailer.unknown_client_email(category,client).deliver if url.nil?
+      WarningMailer.unknown_client_email(category,client).deliver if url.nil? && false
     rescue
       logger.warn("Unable to send email: #{$!}")
       raise
@@ -49,7 +49,6 @@ class SendgridEvent < ActiveRecord::Base
       Curl::Easy::http_post(self.url_to_post,self.to_ampersand_separated_s)
     rescue
       logger.warn("Unable to post to #{self.url_to_post}: #{$!}")
-      raise
     end
     return true
   end
