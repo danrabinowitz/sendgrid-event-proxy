@@ -3,13 +3,13 @@ class SendgridEvent < ActiveRecord::Base
   before_save  :normalize_email
   after_create :post
   
-  SENDGRID_ATTRIBUTES = ['event',
+  SENDGRID_ATTRIBUTES = ['sendgrid_event_type',
                          'email',
                          'category',
                          'reason',
                          'response',
                          'attempt',
-                         'event_type',
+                         'bounce_type',
                          'status',
                          'url',
                          'timestamp']

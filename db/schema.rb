@@ -11,21 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110927135034) do
+ActiveRecord::Schema.define(:version => 20120314161700) do
 
   create_table "sendgrid_events", :force => true do |t|
-    t.string   "event"
+    t.string   "sendgrid_event_type"
     t.string   "email"
     t.string   "category"
     t.string   "reason"
     t.string   "response"
     t.string   "attempt"
-    t.string   "event_type"
+    t.string   "bounce_type"
     t.string   "status"
     t.string   "url"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.string   "timestamp"
+    t.string   "remote_ip"
   end
 
 end
