@@ -27,7 +27,12 @@ class SendgridEvent < ActiveRecord::Base
   end
 
   def url_to_post
-    client,* = category.split('#') # "client1#campaign1#a"
+    case category
+    when 'RWJFstd'
+      client = 'rwjf', 'RWJF_STD'
+    else
+      client,* = category.split('#') # "client1#campaign1#a"
+    end
     return nil if client.nil? or client.downcase=='test'
     return nil if ["sendgrid-event-proxy"].include? client.downcase  # This avoids a circular reference, where warning emails generate warning emails!
     url = SendgridEventProxy::Application.config.destination_urls[client.downcase]
