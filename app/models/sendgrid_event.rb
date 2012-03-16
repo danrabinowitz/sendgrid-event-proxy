@@ -28,8 +28,8 @@ class SendgridEvent < ActiveRecord::Base
 
   def url_to_post
     case category
-    when 'RWJFstd'
-      client = 'rwjf', 'RWJF_STD'
+    when 'RWJFstd', 'RWJF_STD'
+      client = 'rwjf'
     else
       client,* = category.split('#') # "client1#campaign1#a"
     end
