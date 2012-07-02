@@ -19,9 +19,9 @@ class SendgridEvent < ActiveRecord::Base
        sendgrid_value = self.send(variable)
        "#{variable}=#{sendgrid_value}" if sendgrid_value
      end.compact.join('&')
-     URI.escape(sendgrid_data)
+     URI.escape(sendgrid_data).gsub(/\+/,'%2B')
   end
-  
+
   def normalize_email
     self.email = self.email.gsub(/[\<\>]/,'').strip
   end
