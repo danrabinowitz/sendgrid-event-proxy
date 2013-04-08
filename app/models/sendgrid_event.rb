@@ -1,6 +1,6 @@
 class SendgridEvent < ActiveRecord::Base
   
-  before_save  :normalize_email
+  before_save  :normalize_email, :strip_category
   after_create :post
   
   SENDGRID_ATTRIBUTES = ['sendgrid_event_type',
@@ -24,6 +24,10 @@ class SendgridEvent < ActiveRecord::Base
 
   def normalize_email
     self.email = self.email.gsub(/[\<\>]/,'').strip
+  end
+
+  def strip_category
+    self.category = self.category.strip
   end
 
   def url_to_post
